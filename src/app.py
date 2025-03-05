@@ -1,30 +1,50 @@
 import os
 from flask import Flask, request, jsonify, render_template, send_from_directory, redirect, session, url_for
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash
 import logging
-from auth import create_spotify_oauth, get_spotify_client
+from .spotify.auth import create_spotify_oauth, get_spotify_client
+from .config.env import *
+from .config.database import db
+from .persistence.models import User, Playlist, Song, PlaylistSong
+log = logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.DEBUG)
 
-logging.basicConfig(level=logging.DEBUG)
 
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
 app = Flask(__name__, 
     static_folder='frontend/build',
     template_folder='frontend/build')
 CORS(app)
 
-app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///playlists.db"
+app.secret_key = SESSION_KEY
+SESSION_TYPE = 'redis'
+app.config['SESSION_TYPE'] = 'redis'
+app.config['SESSION_REDIS'] = get_redis_connection()
+app.logger = log
+app.config["SQLALCHEMY_DATABASE_URI"] = \
+    'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}'.format(
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
+        port=DB_PORT,
+        db=DB_NAME)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
-from models import User, Playlist, Song, PlaylistSong
+
+@app.route("/")
+def serve_frontend():
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        logging.error(f"Error serving frontend: {str(e)}")
+        return str(e), 500
+    
+# Serve React static files
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('frontend/build', path)
+
 
 @app.route("/login")
 def login():
@@ -37,6 +57,7 @@ def login():
     except Exception as e:
         logging.error(f"Error initiating login: {str(e)}")
         return jsonify({"error": "Failed to initiate login"}), 500
+    
 
 @app.route("/callback")
 def callback():
@@ -93,12 +114,14 @@ def callback():
     except Exception as e:
         logging.error(f"Callback error: {str(e)}")
         return f"Authentication error: {str(e)}", 400
+    
 
 @app.route("/logout")
 def logout():
     """Clear user session"""
     session.clear()
     return jsonify({"success": True})
+
 
 @app.route("/api/me")
 def get_current_user():
@@ -116,13 +139,6 @@ def get_current_user():
         }
     })
 
-@app.route("/")
-def serve_frontend():
-    try:
-        return render_template('index.html')
-    except Exception as e:
-        logging.error(f"Error serving frontend: {str(e)}")
-        return str(e), 500
 
 @app.route("/api/playlists", methods=["GET"])
 def get_playlists():
@@ -134,6 +150,7 @@ def get_playlists():
         "songs": len(p.songs)
     } for p in playlists])
 
+
 @app.route("/api/playlists", methods=["POST"])
 def create_playlist():
     data = request.json
@@ -141,6 +158,7 @@ def create_playlist():
     db.session.add(playlist)
     db.session.commit()
     return jsonify({"id": playlist.id, "name": playlist.name})
+
 
 @app.route("/api/songs/search", methods=["GET"])
 def search_songs():
@@ -154,6 +172,7 @@ def search_songs():
         "albumCover": s.album_cover
     } for s in songs])
 
+
 @app.route("/api/playlists/<int:playlist_id>/songs", methods=["POST"])
 def add_song_to_playlist(playlist_id):
     data = request.json
@@ -161,33 +180,3 @@ def add_song_to_playlist(playlist_id):
     db.session.add(playlist_song)
     db.session.commit()
     return jsonify({"success": True})
-
-# Serve React static files
-@app.route('/<path:path>')
-def serve_static(path):
-    return send_from_directory('frontend/build', path)
-
-with app.app_context():
-    db.create_all()
-
-    # Ensure default user exists
-    if not User.query.filter_by(id=1).first():
-        default_user = User(
-            username="default_user",
-            email="default@example.com",
-            password_hash=generate_password_hash("default_password")
-        )
-        db.session.add(default_user)
-        db.session.commit()
-
-    # Add mock data if database is empty
-    if not Song.query.first():
-        mock_songs = [
-            Song(title="Bohemian Rhapsody", artist="Queen", duration="5:55", 
-                 album_cover="https://images.unsplash.com/photo-1587731556938-38755b4803a6"),
-            Song(title="Imagine", artist="John Lennon", duration="3:03",
-                 album_cover="https://images.unsplash.com/photo-1511367461989-f85a21fda167"),
-            # Add more mock songs
-        ]
-        db.session.bulk_save_objects(mock_songs)
-        db.session.commit()

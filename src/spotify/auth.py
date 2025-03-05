@@ -1,12 +1,12 @@
 import os
 import spotipy
+import logging
 from spotipy.oauth2 import SpotifyOAuth
 from flask import session
-import logging
+from ..config.env import *
 
 # Get the Replit domain from environment
-REPLIT_DOMAIN = os.environ.get('REPL_SLUG', '') + '.' + os.environ.get('REPL_OWNER', '') + '.repl.co'
-SPOTIFY_REDIRECT_URI = f'https://{REPLIT_DOMAIN}/callback'
+SPOTIFY_REDIRECT_URI = f'{BASE_URL}/auth'
 SCOPE = 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private'
 
 def create_spotify_oauth():
@@ -14,8 +14,8 @@ def create_spotify_oauth():
     logging.info(f"Creating Spotify OAuth with redirect URI: {SPOTIFY_REDIRECT_URI}")
     try:
         return SpotifyOAuth(
-            client_id=os.environ['SPOTIFY_CLIENT_ID'],
-            client_secret=os.environ['SPOTIFY_CLIENT_SECRET'],
+            client_id=SPOTIFY_CLIENT_ID,
+            client_secret=SPOTIFY_CLIENT_SECRET,
             redirect_uri=SPOTIFY_REDIRECT_URI,
             scope=SCOPE,
             show_dialog=True  # Force display of Spotify auth dialog

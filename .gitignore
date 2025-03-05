@@ -11,3 +11,6 @@ wheels/
 .venv
 venv/
 env/
+
+# Frontend files
+src/frontend/node_modules/

@@ -13,4 +13,4 @@ venv/
 env/
 
 # Frontend files
-frontend/node_modules/
+node_modules/

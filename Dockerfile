@@ -1,4 +1,4 @@
-FROM tiangolo/meinheld-gunicorn:latest as base-image
+FROM tiangolo/meinheld-gunicorn:latest AS base-image
 
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install -r requirements.txt

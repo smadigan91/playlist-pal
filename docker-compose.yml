@@ -2,7 +2,7 @@ version: "3"
 
 services:
 
-  spotify-app:
+  backend:
     build: .
     ports:
       - "8080:8080"
@@ -41,6 +41,17 @@ services:
       timeout: 10s
     # volumes:
     #   - db_data:/var/lib/postgresql/data/
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    depends_on:
+      backend:
+        condition: service_started
+
 
 # volumes:
 #   db_data:

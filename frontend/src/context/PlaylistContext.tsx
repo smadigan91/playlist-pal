@@ -22,7 +22,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Get the current hostname to use for API calls
-  const apiBase = window.location.origin;
+  const apiBase = "http://localhost:8080";
 
   useEffect(() => {
     checkAuthStatus();

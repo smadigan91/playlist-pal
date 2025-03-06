@@ -59,7 +59,7 @@ def login():
         return jsonify({"error": "Failed to initiate login"}), 500
     
 
-@app.route("/callback")
+@app.route("/auth")
 def callback():
     """Handle Spotify OAuth callback"""
     try:

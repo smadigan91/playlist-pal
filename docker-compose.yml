@@ -19,7 +19,6 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-        restart: true
 
   redis:
     build: ./redis
@@ -37,7 +36,6 @@ services:
       test: ["CMD-SHELL", "pg_isready -U user -d local"]
       interval: 5s
       retries: 5
-      start_period: 30s
       timeout: 10s
     # volumes:
     #   - db_data:/var/lib/postgresql/data/
@@ -46,8 +44,8 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
-    volumes:
-      - ./frontend:/app
+#    volumes:
+#      - ./frontend:/app
     depends_on:
       backend:
         condition: service_started

@@ -1,7 +1,14 @@
+/**
+ * Sidebar component that displays the logo, user info, playlist list, and login prompt.
+ * 
+ * TODO: Do we want to keep this component this way or should we reconsider the layout and design?
+ */
+
 import React from 'react';
 import { usePlaylist } from '../context/PlaylistContext';
 
 const Sidebar: React.FC = () => {
+  // Get functions and variables from the provider using the custom hook we defined in `PLaylistContext.tsx`
   const { 
     playlists, 
     createPlaylist, 
@@ -14,6 +21,12 @@ const Sidebar: React.FC = () => {
   } = usePlaylist();
 
   const handleCreatePlaylist = () => {
+    // TODO: verify this works as expected and consider a different UI for this
+
+    // The prompt function is a built-in method in JavaScript and TypeScript that pauses 
+    // the execution of the script and waits for the user to input a value. Once the user 
+    // enters a value and confirms, the function returns the input as a string. If the 
+    // user cancels the prompt, the function returns null.
     const name = prompt('Enter playlist name:');
     if (name) {
       createPlaylist(name);

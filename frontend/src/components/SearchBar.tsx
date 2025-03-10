@@ -1,3 +1,10 @@
+/**
+ * This component is a search bar that allows the user to search for songs.
+ * 
+ * TODO: Is this searching for songs in all of spotify or only in the current playlist? It should probably be 
+ *   all of spotify so the user can add songs to the playlist.
+ */
+
 import React, { useState } from 'react';
 
 interface SearchBarProps {

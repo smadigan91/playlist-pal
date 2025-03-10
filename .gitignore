@@ -1,3 +1,5 @@
+.idea/
+.cache
 # Python-generated files
 __pycache__/
 *.py[oc]
@@ -5,6 +7,12 @@ build/
 dist/
 wheels/
 *.egg-info
+*.dec
 
 # Virtual environments
 .venv
+venv/
+env/
+
+# Frontend files
+node_modules/

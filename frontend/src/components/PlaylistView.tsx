@@ -8,7 +8,7 @@ const PlaylistView: React.FC = () => {
   const [searchResults, setSearchResults] = useState<Song[]>([]);
 
   const handleSearch = async (query: string) => {
-    const response = await fetch(`http://localhost:5000/api/songs/search?q=${query}`);
+    const response = await fetch(`http://localhost:8080/api/songs/search?q=${query}`);
     const data = await response.json();
     setSearchResults(data);
   };

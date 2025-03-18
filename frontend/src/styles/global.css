@@ -1,3 +1,11 @@
+/**
+ * This is fine for now but we should change this to SCSS or SASS sooner than later.
+ * It will make our styles more maintainable and easier to work with. 
+ 
+ * We should have a framework that allows for variables and mixins so we can fix some
+ * of the styles we use like colors or spacing around content.
+ */
+
 :root {
   --background-base: #121212;
   --background-highlight: #282828;

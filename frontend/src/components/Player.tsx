@@ -1,3 +1,7 @@
+/**
+ * NOTE: Do we want a player in the app or are we intending to only use the app to generate playlists that are exported to spotify?
+ */
+
 import React from 'react';
 
 const Player: React.FC = () => {

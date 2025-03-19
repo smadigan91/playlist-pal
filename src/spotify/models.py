@@ -4,10 +4,12 @@ from typing import List
 Simple classes wrapping responses from Spotify's web API for ease of use.
 """
 
+
 class User:
     """
     Response from Spotify's Users API
     """
+
     def __init__(self, values: dict = None):
         values = values if values is not None else {}
         self.id: str = values.get("id")
@@ -15,10 +17,12 @@ class User:
         self.profile_image_url: str = values.get("images")[0].get("url") if values.get("images") else None
         self.profile_uri: str = values.get("uri")
 
+
 class Track:
     """
     Response from Spotify's Tracks API
     """
+
     def __init__(self, values: dict = None):
         values = values if values is not None else {}
         self.artist = self.TrackArtist(values.get("artists")[0])
@@ -63,6 +67,7 @@ class Artist:
     """
     Response from Spotify's Artists API
     """
+
     def __init__(self, values: dict = None):
         values = values if values is not None else {}
         self.genres: List[str] = values.get("genres", [])

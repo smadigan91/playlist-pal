@@ -41,7 +41,7 @@ SQLALCHEMY_DATABASE_URI = \
         host=DB_HOST,
         port=DB_PORT,
         db=DB_NAME
-)
+    )
 
 # redis
 
@@ -52,6 +52,7 @@ REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = os.environ.get('REDIS_PORT')
 
 redis_connection = None
+
 
 def get_redis_connection():
     global redis_connection

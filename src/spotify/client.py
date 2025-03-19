@@ -45,4 +45,3 @@ class SpotifyClient:
     # this should return the user wrapped in our own spotify User object
     def get_current_user(self) -> User:
         return User(self.sp.current_user())
-

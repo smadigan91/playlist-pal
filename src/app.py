@@ -86,6 +86,7 @@ def callback():
 
         log.info("Authentication successful, redirecting home")
         session[USER_SESSION_IDENTIFIER] = spotify_user.id
+        # set minified user data as cookies in response
         for k, v in user.min().items():
             response.set_cookie(k, v)
     return response

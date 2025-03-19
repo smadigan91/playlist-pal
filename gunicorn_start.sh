@@ -11,5 +11,5 @@ else
     echo "There is no script $PRE_START_PATH"
 fi
 
-# Start Gunicorn
+# Start Gunicorn with preloading
 exec gunicorn -k egg:meinheld#gunicorn_worker -c "$GUNICORN_CONF" "$APP_MODULE" --preload

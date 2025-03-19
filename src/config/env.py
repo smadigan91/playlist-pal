@@ -12,6 +12,8 @@ def get_required(env_var_name):
 
 BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8080')
 
+FRONTEND_BASE_URL = os.environ.get('BASE_URL', 'http://localhost:5173/')
+
 # spotify
 
 SPOTIFY_CLIENT_ID = get_required('SPOTIFY_CLIENT_ID')

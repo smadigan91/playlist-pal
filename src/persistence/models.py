@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime
 import uuid
-from typing import Optional, Any, List
+from typing import Optional, Any, List, Dict
 
 from sqlalchemy import Table, text
 from sqlalchemy.orm import Mapped, mapped_column
@@ -24,6 +24,13 @@ class User(db.Model):
     playlist_roles: Mapped[Optional[List[PlaylistUser]]] = db.relationship(back_populates="user")
     playlist_saves: Mapped[Optional[List[PlaylistSave]]] = db.relationship(back_populates="user")
     track_likes: Mapped[Optional[List[TrackLike]]] = db.relationship(back_populates="user")
+
+    def min(self) -> Dict[str, str]:
+        return {
+            "user_id": self.id,
+            "display_name": self.display_name,
+            "profile_image_url": self.profile_image_url
+        }
 
 class PlaylistComment(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True, autoincrement=True)

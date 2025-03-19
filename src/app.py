@@ -1,11 +1,13 @@
-from flask import Flask, request, jsonify, redirect, session
+from flask import Flask, request, jsonify, redirect, session, make_response
 from flask_cors import CORS
 
 from .config.env import *
 from .logging.logger import log
 from .persistence.database import db
-from .persistence.user_service import create_user, get_user_by_spotify_id
+from .persistence.user_helper import create_user, get_user_by_spotify_id
 from .spotify.auth import sp_oauth, get_spotify_client
+
+USER_SESSION_IDENTIFIER = 'user_id'
 
 app = Flask(__name__)
 CORS(app)
@@ -63,12 +65,15 @@ def callback():
                     log.info("Found existing information for current user")
                 else:
                     log.info("No existing information found for current user, creating new one")
-                    create_user(spotify_user)
+                    user = create_user(spotify_user)
                     log.info(f"Created new user: {spotify_user.display_name}")
 
                 log.info("Authentication successful, redirecting home")
-                session['user_id'] = spotify_user.id
-                return redirect('/')
+                session[USER_SESSION_IDENTIFIER] = spotify_user.id
+                response = make_response(redirect(FRONTEND_BASE_URL))
+                for k, v in user.min().items():
+                    response.set_cookie(k, v)
+                return response
             except Exception as e:
                 log.error(f"Error getting user info: {str(e)}")
                 return "Error getting user info from Spotify", 400
@@ -85,18 +90,12 @@ def logout():
     return jsonify({"success": True})
 
 
-# @app.route("/api/me")
-# def get_current_user():
-#     """Get current user info"""
-#     if 'user_id' not in session:
-#         return jsonify({"authenticated": False})
-#
-#     user = User.query.get(session['user_id'])
-#     return jsonify({
-#         "authenticated": True,
-#         "user": {
-#             "id": user.id,
-#             "username": user.username,
-#             "email": user.email
-#         }
-#     })
+@app.route("/me")
+def get_current_user():
+    """Get current user info"""
+    current_user_id = session.get(USER_SESSION_IDENTIFIER)
+    if not current_user_id:
+        return jsonify({"authenticated": False})
+
+    user = get_user_by_spotify_id(current_user_id)
+    return jsonify(user.min())

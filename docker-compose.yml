@@ -12,8 +12,7 @@ services:
       - secrets/secrets.yml.dec
     environment:
       - LOCAL=True
-      - GUNICORN_RELOAD=True
-      - PUBLIC_URL="http://localhost:8080/"
+      - WEB_CONCURRENCY=2
     depends_on:
       redis:
         condition: service_started

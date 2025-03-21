@@ -1,9 +1,49 @@
 import os
+
 import redis
 
-redis_connection = None
+
+def get_required(env_var_name):
+    val = os.environ.get(env_var_name)
+    if not val:
+        raise RuntimeError(f"Required environment variable {env_var_name} is not defined")
+    return val
+
 
 BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8080')
+
+FRONTEND_BASE_URL = os.environ.get('BASE_URL', 'http://localhost:5173/')
+
+# spotify
+
+SPOTIFY_CLIENT_ID = get_required('SPOTIFY_CLIENT_ID')
+
+SPOTIFY_CLIENT_SECRET = get_required('SPOTIFY_CLIENT_SECRET')
+
+SESSION_KEY = get_required('SESSION_KEY')
+
+# postgres
+
+DB_USER = get_required('DB_USER')
+
+DB_PASSWORD = get_required('DB_PASSWORD')
+
+DB_HOST = get_required('DB_HOST')
+
+DB_PORT = get_required('DB_PORT')
+
+DB_NAME = get_required('DB_NAME')
+
+SQLALCHEMY_DATABASE_URI = \
+    'postgresql+psycopg2://{user}:{password}@{host}:{port}/{db}'.format(
+        user=DB_USER,
+        password=DB_PASSWORD,
+        host=DB_HOST,
+        port=DB_PORT,
+        db=DB_NAME
+    )
+
+# redis
 
 REDIS_URL = os.environ.get('REDIS_URL')
 
@@ -11,28 +51,7 @@ REDIS_HOST = os.environ.get('REDIS_HOST')
 
 REDIS_PORT = os.environ.get('REDIS_PORT')
 
-DB_USER = os.environ.get('DB_USER')
-
-DB_PASSWORD = os.environ.get('DB_PASSWORD')
-
-DB_HOST = os.environ.get('DB_HOST')
-
-DB_PORT = os.environ.get('DB_PORT')
-
-DB_NAME = os.environ.get('DB_NAME')
-
-
-SPOTIFY_CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-if not SPOTIFY_CLIENT_ID:
-    raise RuntimeError("Required environment variable SPOTIFY_CLIENT_ID is not defined")
-
-SPOTIFY_CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
-if not SPOTIFY_CLIENT_SECRET:
-    raise RuntimeError("Required environment variable SPOTIFY_CLIENT_SECRET is not defined")
-
-SESSION_KEY = os.environ.get('SESSION_KEY')
-if not SESSION_KEY:
-    raise RuntimeError("Required environment variable SESSION_KEY is not defined")
+redis_connection = None
 
 
 def get_redis_connection():

@@ -73,7 +73,6 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       const response = await fetch(`${apiBase}/login`);
       const data = await response.json();
-      console.log('login data: ', data);
       if (data.error) {
         console.error('Login error:', data.error);
         return;

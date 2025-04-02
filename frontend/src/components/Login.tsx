@@ -14,16 +14,7 @@ const Login: React.FC<LoginProps> = ({ onLogIn }) => {
 
   const popupRef = useRef<Window | null>(null); // the popup window used for login
 
-  const {
-    // playlists, 
-    // createPlaylist, 
-    // selectedPlaylist, 
-    // setSelectedPlaylist,
-    // isAuthenticated,
-    // user,
-    login,
-    // logout
-  } = usePlaylist();
+  const { login } = usePlaylist();
 
   const callSpotifyLogin = () => windowPopupLogin();
 

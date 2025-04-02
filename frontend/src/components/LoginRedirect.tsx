@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-// TODO: Add loading spinner
+// TODO: Add loading spinner and better styling
 const LoginRedirect: React.FC = () => {
 
   useEffect(() => {

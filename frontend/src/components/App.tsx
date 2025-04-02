@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
 // components
-import Main from '../components/Main';
-import Login from '../components/Login';
-import LoginRedirect from '../components/LoginRedirect';
+import Main from './Main';
+import Login from './Login';
+import LoginRedirect from './LoginRedirect';
 
 // providers
 import { PlaylistProvider } from '../context/PlaylistContext';
@@ -23,6 +23,7 @@ const App: React.FC = () => {
 
   // if no login info, redirect to login page
   useEffect(() => {
+    // TODO: check auth token expiration with auth API maybe?
     if (!isLoggedIn) return;
 
     // Login component sets a successful login boolean

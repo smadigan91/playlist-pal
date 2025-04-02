@@ -23,24 +23,23 @@ const App: React.FC = () => {
 
   // if no login info, redirect to login page
   useEffect(() => {
-    console.log('isLoggedIn: ', isLoggedIn);
     if (!isLoggedIn) return;
 
-    // Login component sets the user info in local storage
-    // check that info and use it to verify auth status
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    console.log(userInfo);
+    // Login component sets a successful login boolean
+    const userInfo = localStorage.getItem('userInfo');
   }, [isLoggedIn])
 
   const logIn = () => {
-    console.log('post login');
-    navigate('/');
     setIsLoggedIn(true);
+    navigate('/');
   }
 
   // pass this callback to components you want to allow logging out
   // it will update the local state and then get persisted
-  const logOut = () => setIsLoggedIn(false);
+  const logOut = () => {
+    localStorage.setItem('userInfo', 'false');
+    setIsLoggedIn(false);
+  }
 
   return (
     <PlaylistProvider>

@@ -51,14 +51,12 @@ const Login: React.FC<LoginProps> = ({ onLogIn }) => {
     window.addEventListener('message', (event) => {
       if (event.origin === window.location.origin) {
         const { type, payload } = event.data;
-        if (type === 'spotify_token') {
-          console.log('event: ', event);
+        if (type === 'success') {
           if (popup) popup.close(); // Close the popup
 
           localStorage.setItem('userInfo', JSON.stringify(payload));
           // Call the onLogIn function to update the state in the parent component
           onLogIn();
-          // callback(payload); // Call the callback with the token
         }
       }
     });

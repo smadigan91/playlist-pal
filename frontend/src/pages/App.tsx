@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 // components
 import Main from '../components/Main';
 import Login from '../components/Login';
+import LoginRedirect from '../components/LoginRedirect';
 
 // providers
 import { PlaylistProvider } from '../context/PlaylistContext';
 
 // routing
-import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route, useNavigate } from 'react-router-dom';
 
 // styles
 import '../styles/global.css';
@@ -18,34 +19,36 @@ const App: React.FC = () => {
     () => localStorage.getItem('userInfo') !== null
   );
 
+  const navigate = useNavigate();
+
   // if no login info, redirect to login page
   useEffect(() => {
+    console.log('isLoggedIn: ', isLoggedIn);
     if (!isLoggedIn) return;
-    
-    // TODO: change this, this is just a placeholder until spotify login returns user credentials
-    //   Login component should set the user info in local storage
-    //   and then this should check for that info
-    localStorage.setItem('userInfo', JSON.stringify(isLoggedIn));
 
-    // TODO: uncomment once the above is implemented
-    // const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
-    // if (!userInfo) setIsLoggedIn(false);
+    // Login component sets the user info in local storage
+    // check that info and use it to verify auth status
+    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+    console.log(userInfo);
   }, [isLoggedIn])
 
-  const logIn = () => setIsLoggedIn(true);
+  const logIn = () => {
+    console.log('post login');
+    navigate('/');
+    setIsLoggedIn(true);
+  }
 
   // pass this callback to components you want to allow logging out
   // it will update the local state and then get persisted
-  // const logOut = () => setIsLoggedIn(false);
+  const logOut = () => setIsLoggedIn(false);
 
   return (
     <PlaylistProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={isLoggedIn ? <Main /> : <Navigate to='/login' />} />
-          <Route path="/login" element={<Login onLogIn={logIn} />} />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path='/' element={isLoggedIn ? <Main /> : <Navigate to='/login' />} />
+        <Route path='/login' element={<Login onLogIn={logIn} />} />
+        <Route path='/postlogin' element={<LoginRedirect />} />
+      </Routes>
     </PlaylistProvider>
   );
 };

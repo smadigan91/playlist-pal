@@ -3,9 +3,6 @@ import React, { useRef } from 'react';
 // context
 import { usePlaylist } from '../context/PlaylistContext';
 
-// routing
-import { redirect } from "react-router";
-
 // styles
 import '../styles/login.css';
 
@@ -17,26 +14,18 @@ const Login: React.FC<LoginProps> = ({ onLogIn }) => {
 
   const popupRef = useRef<Window | null>(null); // the popup window used for login
 
-  const { 
-      // playlists, 
-      // createPlaylist, 
-      // selectedPlaylist, 
-      // setSelectedPlaylist,
-      // isAuthenticated,
-      // user,
-      login,
-      // logout
-    } = usePlaylist();
+  const {
+    // playlists, 
+    // createPlaylist, 
+    // selectedPlaylist, 
+    // setSelectedPlaylist,
+    // isAuthenticated,
+    // user,
+    login,
+    // logout
+  } = usePlaylist();
 
-  const callSpotifyLogin = () => {
-    windowPopupLogin();
-
-    if (false) {
-      onLogIn();
-    }
-
-    return redirect(`/`);
-  }
+  const callSpotifyLogin = () => windowPopupLogin();
 
   const windowPopupLogin = () => {
     // make sure the width and height are not bigger than the screen
@@ -55,8 +44,24 @@ const Login: React.FC<LoginProps> = ({ onLogIn }) => {
     if (popupRef.current) popupRef.current.close();
 
     // open a window with proper position and width and height
-    const windowStyles=`width=${popupWidth},height=${popupHeight},left=${popupLeft},top=${popupTop}`;
+    const windowStyles = `width=${popupWidth},height=${popupHeight},left=${popupLeft},top=${popupTop}`;
     const popup = window.open('', '_blank', windowStyles);
+
+    // Listen for messages from the popup
+    window.addEventListener('message', (event) => {
+      if (event.origin === window.location.origin) {
+        const { type, payload } = event.data;
+        if (type === 'spotify_token') {
+          console.log('event: ', event);
+          if (popup) popup.close(); // Close the popup
+
+          localStorage.setItem('userInfo', JSON.stringify(payload));
+          // Call the onLogIn function to update the state in the parent component
+          onLogIn();
+          // callback(payload); // Call the callback with the token
+        }
+      }
+    });
 
     // focus on the opened window
     popup?.focus();

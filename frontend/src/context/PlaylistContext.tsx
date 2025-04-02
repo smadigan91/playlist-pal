@@ -53,7 +53,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const checkAuthStatus = async () => {
     try {
       // TODO: verify the API endpoint for this
-      const response = await fetch(`${apiBase}/api/me`);
+      const response = await fetch(`${apiBase}/me`);
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
       if (data.authenticated) {

@@ -16,7 +16,7 @@ const Sidebar: React.FC = () => {
     setSelectedPlaylist,
     isAuthenticated,
     user,
-    login,
+    // login,
     logout
   } = usePlaylist();
 
@@ -62,7 +62,7 @@ const Sidebar: React.FC = () => {
       ) : (
         <div className="login-prompt">
           <p>Log in with Spotify to create and manage playlists</p>
-          <button onClick={login} className="auth-button">
+          <button onClick={() => {}} className="auth-button">
             Login with Spotify
           </button>
         </div>

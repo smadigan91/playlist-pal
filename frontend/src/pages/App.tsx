@@ -36,7 +36,7 @@ const App: React.FC = () => {
 
   // pass this callback to components you want to allow logging out
   // it will update the local state and then get persisted
-  const logOut = () => setIsLoggedIn(false);
+  // const logOut = () => setIsLoggedIn(false);
 
   return (
     <PlaylistProvider>

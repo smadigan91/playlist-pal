@@ -20,7 +20,7 @@ interface PlaylistContextType {
   selectedPlaylist: Playlist | null;
   user: User | null;
   isAuthenticated: boolean;
-  login: () => void;
+  login: (popup: Window) => void;
   logout: () => void;
   setSelectedPlaylist: (playlist: Playlist) => void;
   createPlaylist: (name: string) => void;
@@ -69,20 +69,18 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Function to login the user. This is called when the user is not authenticated and needs to login to use the app.
   // Attach this function to the login button in the UI.
-  const login = async () => {
+  const login = async (popup: Window) => {
     try {
-      // TODO: verify the API endpoint for this
       const response = await fetch(`${apiBase}/login`);
       const data = await response.json();
+      console.log('login data: ', data);
       if (data.error) {
         console.error('Login error:', data.error);
         return;
       }
 
-      // TODO: do we want to be doing this? This will redirect the user to the login page
-      // We could popout a window instead of navigating away from the app. Guess that will
-      // be a design decision we have to make
-      window.location.href = data.loginUrl;
+      // use the popup window to redirect the user to the login page
+      popup.location.href = data.loginUrl;
     } catch (error) {
       console.error('Error initiating login:', error);
     }
@@ -127,7 +125,8 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const createPlaylist = async (name: string) => {
     if (!isAuthenticated) {
       // alternative way to handle login if we want to let users interact with the app before logged in or authenticated
-      login();
+      // TODO: redirect ot login page or popout a window
+      // login();
       return;
     }
 
@@ -154,7 +153,8 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const addSongToPlaylist = async (playlistId: number, song: Song) => {
     if (!isAuthenticated) {
       // alternative way to handle login if we want to let users interact with the app before logged in or authenticated
-      login();
+      // TODO: redirect ot login page or popout a window
+      // login();
       return;
     }
 

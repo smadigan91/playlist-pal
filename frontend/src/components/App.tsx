@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import '../styles/global.css';
 
 // components
-import Main from './Main';
 import Login from './Login';
 import LoginRedirect from './LoginRedirect';
+import Main from './Main';
+import Navbar from './Navbar';
 
 // providers
 import { PlaylistProvider } from '../context/PlaylistContext';
 
 // routing
 import { Navigate, Routes, Route, useNavigate } from 'react-router-dom';
-
-// styles
-import '../styles/global.css';
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
@@ -44,6 +43,7 @@ const App: React.FC = () => {
 
   return (
     <PlaylistProvider>
+      <Navbar></Navbar>
       <Routes>
         <Route path='/' element={isLoggedIn ? <Main /> : <Navigate to='/login' />} />
         <Route path='/login' element={<Login onLogIn={logIn} />} />

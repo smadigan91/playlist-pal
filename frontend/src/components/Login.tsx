@@ -1,10 +1,8 @@
 import React, { useRef } from 'react';
+import '../styles/login.css';
 
 // context
 import { usePlaylist } from '../context/PlaylistContext';
-
-// styles
-import '../styles/login.css';
 
 interface LoginProps {
   onLogIn: () => void;

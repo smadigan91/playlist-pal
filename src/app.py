@@ -71,7 +71,7 @@ def callback():
 
     # Get user info and create/update user in database
     client = get_spotify_client(code)
-    response = make_response(redirect(FRONTEND_BASE_URL))
+    response = make_response(redirect(FRONTEND_BASE_URL + 'postlogin#success=true'))
     if client:
         spotify_user = client.get_current_user()
         log.info(f"Got Spotify user info: {spotify_user.id}")

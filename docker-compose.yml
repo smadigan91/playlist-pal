@@ -44,6 +44,13 @@ services:
     depends_on:
       backend:
         condition: service_started
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend
+          target: /app
+          ignore:
+            - node_modules/
 
 
 volumes:

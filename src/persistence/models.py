@@ -20,7 +20,7 @@ playlist_track = Table(
 class User(db.Model):
     id: Mapped[str] = mapped_column(db.String(64), primary_key=True)
     display_name: Mapped[str] = mapped_column(db.String(64))
-    profile_image_url: Mapped[Optional[str]] = mapped_column(db.String(128))
+    profile_image_url: Mapped[Optional[str]] = mapped_column(db.String(512))
     profile_uri: Mapped[str] = mapped_column(db.String(120))
     playlist_roles: Mapped[Optional[List[PlaylistUser]]] = db.relationship(back_populates="user")
     playlist_saves: Mapped[Optional[List[PlaylistSave]]] = db.relationship(back_populates="user")

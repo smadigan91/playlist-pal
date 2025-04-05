@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, redirect, session, make_response
 from flask_cors import CORS
+from flask_session import Session
+from datetime import timedelta
 
 from .config.env import *
 from .errors.base import BaseWebAppError
@@ -13,17 +15,20 @@ USER_SESSION_IDENTIFIER = 'user_id'
 app = Flask(__name__)
 CORS(app)
 
+# configure session, db
 app.secret_key = SESSION_KEY
-SESSION_TYPE = 'redis'
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_REDIS'] = get_redis_connection()
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=3)
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
+# init session
+server_session = Session(app)
+
+# init db
 db.init_app(app)
-
 with app.app_context():
     db.create_all()
-
 
 # error handling
 def default_exception_handler(exception):

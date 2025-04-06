@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styles/navbar.css';
 
 // components
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 
-// providers
+// context
 import { usePlaylist } from '../context/PlaylistContext';
 
 const Navbar: React.FC = () => {

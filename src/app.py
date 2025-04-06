@@ -12,6 +12,7 @@ USER_SESSION_IDENTIFIER = 'user_id'
 
 app = Flask(__name__)
 CORS(app)
+CORS(app, supports_credentials=True)
 
 app.secret_key = SESSION_KEY
 SESSION_TYPE = 'redis'

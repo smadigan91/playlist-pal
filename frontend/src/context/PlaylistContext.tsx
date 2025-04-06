@@ -19,6 +19,7 @@ interface PlaylistContextType {
   playlists: Playlist[];
   selectedPlaylist: Playlist | null;
   user: User | null;
+  setUser: (user: User) => void;
   isAuthenticated: boolean;
   login: (popup: Window) => void;
   logout: () => void;
@@ -43,9 +44,9 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // useEffect hook with an empty dependency array to run once when the component mounts. When component mounts
   // means when usePlaylist is called in a component and this provider initializes.
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
+  // useEffect(() => {
+  //   checkAuthStatus();
+  // }, []);
 
   // Function to check the authentication status of the user. This is used to check if the user is logged in
   // before performing performing any actions that require authentication which is everything in the app for
@@ -188,6 +189,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         playlists,
         selectedPlaylist,
         user,
+        setUser,
         isAuthenticated,
         login,
         logout,

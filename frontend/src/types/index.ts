@@ -25,8 +25,7 @@ export interface Song {
 }
 
 export interface User {
-  id: number;
+  user_id: string;
   display_name: string;
-  email: string;
   profile_image_url: string;
 }

@@ -40,10 +40,9 @@ const Login: React.FC<LoginProps> = ({ onLogIn }) => {
     window.addEventListener('message', (event) => {
       if (event.origin === window.location.origin) {
         const { type, payload } = event.data;
-        if (type === 'success') {
+        if (type === 'success' && payload) {
           if (popup) popup.close(); // Close the popup
 
-          localStorage.setItem('userInfo', JSON.stringify(payload));
           // Call the onLogIn function to update the state in the parent component
           onLogIn();
         }

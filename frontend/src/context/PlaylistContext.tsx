@@ -19,7 +19,6 @@ interface PlaylistContextType {
   playlists: Playlist[];
   selectedPlaylist: Playlist | null;
   user: User | null;
-  setUser: (user: User) => void;
   isAuthenticated: boolean;
   login: (popup: Window) => void;
   logout: () => void;
@@ -44,9 +43,9 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // useEffect hook with an empty dependency array to run once when the component mounts. When component mounts
   // means when usePlaylist is called in a component and this provider initializes.
-  // useEffect(() => {
-  //   checkAuthStatus();
-  // }, []);
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   // Function to check the authentication status of the user. This is used to check if the user is logged in
   // before performing performing any actions that require authentication which is everything in the app for
@@ -54,11 +53,15 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const checkAuthStatus = async () => {
     try {
       // TODO: verify the API endpoint for this
-      const response = await fetch(`${apiBase}/me`);
+      const response = await fetch(`${apiBase}/me`, { credentials: 'include' });
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
       if (data.authenticated) {
-        setUser(data.user);
+        setUser({
+          user_id: data.user_id,
+          display_name: data.display_name,
+          profile_image_url: data.profile_image_url
+        });
         // if we have a user, we can fetch their playlists and continue setting up the UI
         fetchPlaylists();
       }
@@ -189,7 +192,6 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         playlists,
         selectedPlaylist,
         user,
-        setUser,
         isAuthenticated,
         login,
         logout,

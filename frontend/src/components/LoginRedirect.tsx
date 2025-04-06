@@ -13,25 +13,8 @@ const LoginRedirect: React.FC = () => {
     const isSuccess = params.get('success');
 
     if (isSuccess) {
-      // get user info from cookies and store in local storage
-      const cookies = document.cookie.split('; ');
-
-      const userInfo: User = {
-        user_id: '',
-        display_name: '',
-        profile_image_url: ''
-      };
-
-      cookies.forEach(cookie => {
-        const [key, ...valueParts] = cookie.split('=');
-        const value = valueParts.join('=');
-
-        const validKeys = ['user_id', 'display_name', 'profile_image_url'];
-        if (validKeys.includes(key)) userInfo[key as keyof User] = value.replace(/"/g, '');
-      });
-
       // Store the user info in local storage
-      localStorage.setItem('userInfo', JSON.stringify(userInfo));
+      localStorage.setItem('userInfo', JSON.stringify(isSuccess));
       window.opener.postMessage({ type: 'success', payload: isSuccess }, window.location.origin);
     }
   }, [])

@@ -113,4 +113,4 @@ def get_current_user():
         return jsonify({"authenticated": False})
 
     user = get_user_by_spotify_id(current_user_id)
-    return jsonify(user.min())
+    return jsonify({**user.min(), "authenticated": True})

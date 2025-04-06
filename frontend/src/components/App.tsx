@@ -8,7 +8,7 @@ import Main from './Main';
 import Navbar from './Navbar';
 
 // context
-import { usePlaylist } from '../context/PlaylistContext';
+import { PlaylistProvider } from '../context/PlaylistContext';
 
 // routing
 import { Navigate, Routes, Route, useNavigate } from 'react-router-dom';
@@ -20,16 +20,10 @@ const App: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const { setUser } = usePlaylist();
-
-  // if no login info, redirect to login page
   useEffect(() => {
     // TODO: check auth token expiration with auth API maybe?
     if (!isLoggedIn) return;
 
-    // Login component sets a successful login boolean
-    const userInfo = localStorage.getItem('userInfo');
-    setUser(JSON.parse(userInfo));
   }, [isLoggedIn])
 
   const logIn = () => {
@@ -46,7 +40,7 @@ const App: React.FC = () => {
 
   // TODO: default to show login for all routes if no user info
   return (
-    <>
+    <PlaylistProvider>
       <Navbar></Navbar>
       <Routes>
         <Route path='/' element={isLoggedIn ? <Main /> : <Navigate to='/login' />} />
@@ -54,7 +48,7 @@ const App: React.FC = () => {
         <Route path='/postlogin' element={<LoginRedirect />} />
         {/* <Route path='/settings' element={<UserSettings />} /> */}
       </Routes>
-    </>
+    </PlaylistProvider>
   );
 };
 

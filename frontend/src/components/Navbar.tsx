@@ -6,16 +6,26 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 
 // context
 import { usePlaylist } from '../context/PlaylistContext';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+  const { logout, user } = usePlaylist();
 
-  const { user } = usePlaylist();
+  const logoutClick = () => {
+    logout();
+    localStorage.removeItem('userInfo');
+    navigate('/login');
+  }
 
   return (
     <div className='navbar'>
       <div className='navbar-logo'></div>
       <div className='navbar-user'>
-        <Menu>
+        {!user && <button className='navbar-login-button' onClick={() => window.location.href = '/login'}>
+            Log In
+        </button>}
+        {user && <Menu>
           <MenuButton>
             <div className='user-info'>
               <img className='spotify-profile-image' src={user?.profile_image_url} alt='user' />
@@ -26,11 +36,11 @@ const Navbar: React.FC = () => {
             <MenuItem as='a' className='block data-[focus]:bg-blue-100' href='/settings'>
               User Settings
             </MenuItem>
-            <MenuItem as='a' className='block data-[focus]:bg-blue-100' href='/logout'>
+            <MenuItem as='a' className='block data-[focus]:bg-blue-100' onClick={logoutClick}>
               Log Out
             </MenuItem>
           </MenuItems>
-        </Menu>
+        </Menu>}
       </div>
     </div>
   )

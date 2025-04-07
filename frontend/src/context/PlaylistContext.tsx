@@ -16,6 +16,7 @@ import { Playlist, Song, User } from '../types';
 
 // This is fine to be defined here since the interface communicates the shape of this "provider"
 interface PlaylistContextType {
+  checkAuthStatus: () => void;
   playlists: Playlist[];
   selectedPlaylist: Playlist | null;
   user: User | null;
@@ -41,19 +42,17 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // outside of a local environemnt, the hostname will be different and the API calls will break.
   const apiBase = "http://localhost:8080";
 
-  // useEffect hook with an empty dependency array to run once when the component mounts. When component mounts
-  // means when usePlaylist is called in a component and this provider initializes.
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
   // Function to check the authentication status of the user. This is used to check if the user is logged in
   // before performing performing any actions that require authentication which is everything in the app for
   // now except the actual login function.
   const checkAuthStatus = async () => {
     try {
-      // TODO: verify the API endpoint for this
-      const response = await fetch(`${apiBase}/me`, { credentials: 'include' });
+      const response = await fetch(`${apiBase}/me`, { 
+        credentials: 'include',
+        headers: {
+          cookie: document.cookie
+        }
+      });
       const data = await response.json();
       setIsAuthenticated(data.authenticated);
       if (data.authenticated) {
@@ -63,7 +62,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           profile_image_url: data.profile_image_url
         });
         // if we have a user, we can fetch their playlists and continue setting up the UI
-        fetchPlaylists();
+        // fetchPlaylists();
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
@@ -93,7 +92,6 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Attach this function to the logout button in the UI.
   const logout = async () => {
     try {
-      // TODO: verify the API endpoint for this
       await fetch(`${apiBase}/logout`);
 
       // if successful, reset the state of the app by clearing the local state variables for
@@ -189,6 +187,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // value is the object that is provided to all components that use the context. We can have more functions
       // in the provider that are not added to this value property making those functions private to the provider.
       value={{
+        checkAuthStatus,
         playlists,
         selectedPlaylist,
         user,

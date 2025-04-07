@@ -14,6 +14,7 @@ const LoginRedirect: React.FC = () => {
 
     if (isSuccess) {
       // Store the user info in local storage
+      console.log('Login successful:', isSuccess);
       localStorage.setItem('userInfo', JSON.stringify(isSuccess));
       window.opener.postMessage({ type: 'success', payload: isSuccess }, window.location.origin);
     }

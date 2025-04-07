@@ -34,43 +34,47 @@ body {
   height: 100vh;
 
   .app {
-    display: flex;
-    flex-direction: column;
     height: 100%;
 
-    .main-container {
+    .main {
+      height: 100%;
       display: flex;
-      flex: 1;
-      overflow: hidden;
+      flex-direction: column;
 
-      .playlist-view {
+      .main-container {
+        display: flex;
         flex: 1;
-        padding: 24px;
-        background-color: var(--background-base);
-        overflow-y: auto;
+        overflow: hidden;
 
-        .search-bar {
-          margin-bottom: 24px;
+        .playlist-view {
+          flex: 1;
+          padding: 24px;
+          background-color: var(--background-base);
+          overflow-y: auto;
 
-          input {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--background-highlight);
-            border: none;
-            border-radius: 4px;
-            color: var(--text-primary);
+          .search-bar {
+            margin-bottom: 24px;
+
+            input {
+              width: 100%;
+              padding: 12px;
+              background-color: var(--background-highlight);
+              border: none;
+              border-radius: 4px;
+              color: var(--text-primary);
+            }
           }
+
+
         }
-
-        
       }
-    }
 
-    .player {
-      height: 90px;
-      background-color: var(--background-highlight);
-      border-top: 1px solid #404040;
-      padding: 16px;
+      .player {
+        height: 90px;
+        background-color: var(--background-highlight);
+        border-top: 1px solid #404040;
+        padding: 16px;
+      }
     }
   }
 }

@@ -25,6 +25,12 @@ const Main: React.FC = () => {
   }, []);
 
   // TODO: check isAuthenticated and redirect to login if not authenticated
+  useEffect(() => {
+    if (isAuthenticated === null || isAuthenticated) return;
+    
+    // if isAuthenticated is false, redirect to login
+    navigate('/login');
+  }, [isAuthenticated]);
 
   return (
     <div className="main">

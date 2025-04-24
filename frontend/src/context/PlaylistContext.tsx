@@ -20,7 +20,7 @@ interface PlaylistContextType {
   playlists: Playlist[];
   selectedPlaylist: Playlist | null;
   user: User | null;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   login: (popup: Window) => void;
   logout: () => void;
   setSelectedPlaylist: (playlist: Playlist) => void;
@@ -35,12 +35,19 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   // Get the current hostname to use for API calls
   // This is really bad practice and should be changed to use an environment variable. When this is deployed
   // outside of a local environemnt, the hostname will be different and the API calls will break.
   const apiBase = "http://localhost:8080";
+
+  // TODO: this is commented out for now because it is not working. We need to figure out how to use the
+  // useEffect hook to check the authentication status of the user when the context is created and mounted
+  // so each page in the app will do this auth check
+  // useEffect(() => {
+  //   checkAuthStatus();
+  // }, [])
 
   // Function to check the authentication status of the user. This is used to check if the user is logged in
   // before performing performing any actions that require authentication which is everything in the app for

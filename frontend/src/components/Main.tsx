@@ -8,6 +8,7 @@ import Player from './Player';
 // contexts
 import { usePlaylist } from '../context/PlaylistContext';
 import { useNavigate } from 'react-router-dom';
+import { userInfo } from 'os';
 
 const Main: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
@@ -25,8 +26,13 @@ const Main: React.FC = () => {
   }, []);
 
   // TODO: check isAuthenticated and redirect to login if not authenticated
+  //   if no user info but we are authenticated, go to main page
   useEffect(() => {
-    if (isAuthenticated === null || isAuthenticated) return;
+    if (isAuthenticated === null || isAuthenticated) {
+      console.log('isAuthenticated', isAuthenticated);
+      if (isAuthenticated && !isLoggedIn) navigate('/');
+      return;
+    }
     
     // if isAuthenticated is false, redirect to login
     navigate('/login');

@@ -13,36 +13,29 @@ from .spotify.auth import sp_oauth, get_spotify_client, SpotifyAuthError
 
 USER_SESSION_IDENTIFIER = 'user_id'
 
+app = Flask(__name__)
+CORS(app)
 
-def create_app():
-    # create app
-    flask_app = Flask(__name__)
-    CORS(flask_app)
+# configure session, db
+app.secret_key = SESSION_KEY
+redis_conn = get_redis_connection()
+if redis_conn:
+    app.config['SESSION_TYPE'] = 'redis'
+    app.config['SESSION_REDIS'] = get_redis_connection()
+else:
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.config['SESSION_TYPE'] = 'cachelib'
+    app.config['SESSION_SERIALIZATION_FORMAT'] = 'json'
+    app.config['SESSION_CACHELIB'] = FileSystemCache(threshold=50, cache_dir="/flask_session"),
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=3)
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
-    # configure session, db
-    flask_app.secret_key = SESSION_KEY
-    redis_conn = get_redis_connection()
-    if redis_conn:
-        flask_app.config['SESSION_TYPE'] = 'redis'
-        flask_app.config['SESSION_REDIS'] = get_redis_connection()
-    else:
-        flask_app.config['SESSION_TYPE'] = 'filesystem'
-        flask_app.config['SESSION_TYPE'] = 'cachelib'
-        flask_app.config['SESSION_SERIALIZATION_FORMAT'] = 'json'
-        flask_app.config['SESSION_CACHELIB'] = FileSystemCache(threshold=50, cache_dir="/flask_session"),
-    flask_app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=3)
-    flask_app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+# init db
+from .persistence.database import db
 
-    # init db
-    from .persistence.database import db
-    db.init_app(flask_app)
-    with flask_app.app_context():
-        db.create_all()
-
-    return flask_app
-
-
-app = create_app()
+db.init_app(app)
+with app.app_context():
+    db.create_all()
 
 # init session
 server_session = Session(app)

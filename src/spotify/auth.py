@@ -11,10 +11,18 @@ from ..logging.logger import log
 
 SPOTIFY_REDIRECT_URI = f'{BASE_URL}/auth'
 SCOPE = 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private'
-sp_oauth = SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET,
-                        redirect_uri=SPOTIFY_REDIRECT_URI, scope=SCOPE, show_dialog=True,
-                        cache_handler=RedisCacheHandler(redis=get_redis_connection()))
 
+def init_oauth():
+    redis_conn = get_redis_connection()
+    if redis_conn:
+        return SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET,
+                     redirect_uri=SPOTIFY_REDIRECT_URI, scope=SCOPE, show_dialog=True,
+                     cache_handler=RedisCacheHandler(redis=get_redis_connection()))
+    else:
+        return SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET,
+                            redirect_uri=SPOTIFY_REDIRECT_URI, scope=SCOPE, show_dialog=True)
+
+sp_oauth = init_oauth()
 
 class SpotifyAuthError(SpotifyError):
 

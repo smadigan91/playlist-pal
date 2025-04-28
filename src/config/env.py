@@ -1,7 +1,6 @@
 import os
-
 import redis
-
+from ..logging.logger import log
 
 def get_required(env_var_name):
     val = os.environ.get(env_var_name)
@@ -64,5 +63,5 @@ def get_redis_connection():
             redis_connection = redis.StrictRedis.from_url(url=REDIS_URL, retry_on_timeout=True, socket_timeout=10,
                                                           socket_connect_timeout=1)
         else:
-            raise RuntimeError("REDIS_URL or (REDIS_HOST and REDIS_PORT) must be defined")
+            log.warning("No redis connection detected, defaulting to in-memory Flask & Spotify session management")
     return redis_connection

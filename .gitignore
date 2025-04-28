@@ -8,6 +8,7 @@ dist/
 wheels/
 *.egg-info
 *.dec
+flask_session/
 
 # Virtual environments
 .venv

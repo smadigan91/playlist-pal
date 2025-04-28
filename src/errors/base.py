@@ -1,7 +1,5 @@
 from ..logging.logger import log
 
-from typing import Optional
-
 
 class BaseWebAppError(Exception):
 

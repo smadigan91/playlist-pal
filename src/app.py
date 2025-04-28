@@ -14,6 +14,7 @@ USER_SESSION_IDENTIFIER = 'user_id'
 
 app = Flask(__name__)
 CORS(app)
+CORS(app, supports_credentials=True)
 
 # configure session, db
 app.secret_key = SESSION_KEY
@@ -112,4 +113,4 @@ def get_current_user():
         return jsonify({"authenticated": False})
 
     user = get_user_by_spotify_id(current_user_id)
-    return jsonify(user.min())
+    return jsonify({**user.min(), "authenticated": True})

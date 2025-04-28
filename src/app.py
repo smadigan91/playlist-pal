@@ -31,13 +31,13 @@ else:
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=3)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
+# init session
+server_session = Session(app)
+
 # init db
 db.init_app(app)
 with app.app_context():
     db.create_all()
-
-# init session
-server_session = Session(app)
 
 
 # error handling

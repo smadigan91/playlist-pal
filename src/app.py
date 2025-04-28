@@ -8,6 +8,7 @@ from flask_session import Session
 from .config.env import *
 from .errors.base import BaseWebAppError
 from .logging.logger import log
+from .persistence.database import db
 from .persistence.user_helper import create_user, get_user_by_spotify_id
 from .spotify.auth import sp_oauth, get_spotify_client, SpotifyAuthError
 
@@ -31,8 +32,6 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=3)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
 # init db
-from .persistence.database import db
-
 db.init_app(app)
 with app.app_context():
     db.create_all()

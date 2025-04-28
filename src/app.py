@@ -1,8 +1,9 @@
+from datetime import timedelta
+
+from cachelib import FileSystemCache
 from flask import Flask, request, jsonify, redirect, session, make_response
 from flask_cors import CORS
 from flask_session import Session
-from datetime import timedelta
-from cachelib import FileSystemCache
 
 from .config.env import *
 from .errors.base import BaseWebAppError
@@ -11,6 +12,7 @@ from .persistence.user_helper import create_user, get_user_by_spotify_id
 from .spotify.auth import sp_oauth, get_spotify_client, SpotifyAuthError
 
 USER_SESSION_IDENTIFIER = 'user_id'
+
 
 def create_app():
     # create app
@@ -39,10 +41,12 @@ def create_app():
 
     return flask_app
 
+
 app = create_app()
 
 # init session
 server_session = Session(app)
+
 
 # error handling
 def default_exception_handler(exception):

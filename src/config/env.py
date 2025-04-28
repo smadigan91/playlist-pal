@@ -1,6 +1,9 @@
 import os
+
 import redis
+
 from ..logging.logger import log
+
 
 def get_required(env_var_name):
     val = os.environ.get(env_var_name)

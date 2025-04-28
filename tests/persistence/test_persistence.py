@@ -1,10 +1,12 @@
-from src.persistence.models import User
-from src.persistence import user_helper
-from src.spotify.models import User as SpotifyUser
 from sqlalchemy import select
 
+from src.persistence import user_helper
+from src.persistence.models import User
+from src.spotify.models import User as SpotifyUser
+
 test_user = User(id="test_id", display_name="test_user", profile_image_url="test_image_url.com",
-                profile_uri="spotify:profile/test_user")
+                 profile_uri="spotify:profile/test_user")
+
 
 def test_persist_user(db_session):
     db_session.add(test_user)
@@ -16,11 +18,13 @@ def test_persist_user(db_session):
 
     assert result.id == test_user.id
 
+
 def test_persist_spotify_user(db_session):
     test_spotify_user = user_to_spotify_user(test_user)
     created_user = user_helper.create_user(test_spotify_user)
     retrieved_user = user_helper.get_user_by_spotify_id(test_spotify_user.id)
     assert created_user == retrieved_user
+
 
 def user_to_spotify_user(user: User):
     spotify_user = SpotifyUser()

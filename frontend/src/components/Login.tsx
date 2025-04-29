@@ -1,19 +1,17 @@
 import React, { useRef } from 'react';
+import '../styles/login.css';
+
+// components
+import Navbar from './Navbar';
 
 // context
 import { usePlaylist } from '../context/PlaylistContext';
+import { useNavigate } from 'react-router-dom';
 
-// styles
-import '../styles/login.css';
-
-interface LoginProps {
-  onLogIn: () => void;
-}
-
-const Login: React.FC<LoginProps> = ({ onLogIn }) => {
-
+const Login: React.FC = () => {
   const popupRef = useRef<Window | null>(null); // the popup window used for login
 
+  const navigate = useNavigate();
   const { login } = usePlaylist();
 
   const callSpotifyLogin = () => windowPopupLogin();
@@ -42,12 +40,11 @@ const Login: React.FC<LoginProps> = ({ onLogIn }) => {
     window.addEventListener('message', (event) => {
       if (event.origin === window.location.origin) {
         const { type, payload } = event.data;
-        if (type === 'success') {
+        if (type === 'success' && payload) {
           if (popup) popup.close(); // Close the popup
 
-          localStorage.setItem('userInfo', JSON.stringify(payload));
           // Call the onLogIn function to update the state in the parent component
-          onLogIn();
+          navigate('/'); // Redirect to the main page
         }
       }
     });
@@ -62,9 +59,12 @@ const Login: React.FC<LoginProps> = ({ onLogIn }) => {
   }
 
   return (
-    <div className='login-container'>
-      <div>Login to Spotify to use features of this App!</div>
-      <button className='auth-button' onClick={callSpotifyLogin}>Login with Spotify</button>
+    <div className='login-page'>
+      <Navbar />
+      <div className='login-container'>
+        <div>Login to Spotify to use features of this App!</div>
+        <button className='auth-button' onClick={callSpotifyLogin}>Login with Spotify</button>
+      </div>
     </div>
   )
 }

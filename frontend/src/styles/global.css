@@ -1,3 +1,4 @@
+@import "tailwindcss";
 /**
  * This is fine for now but we should change this to SCSS or SASS sooner than later.
  * It will make our styles more maintainable and easier to work with. 
@@ -27,50 +28,55 @@ body {
   color: var(--text-primary);
 }
 
-.app {
+#root {
   display: flex;
   flex-direction: column;
   height: 100vh;
-}
 
-.main-container {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
+  .app {
+    height: 100%;
 
-.sidebar {
-  width: 240px;
-  background-color: var(--background-base);
-  padding: 24px 16px;
-  border-right: 1px solid var(--background-highlight);
-}
+    .main {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
 
-.playlist-view {
-  flex: 1;
-  padding: 24px;
-  background-color: var(--background-base);
-  overflow-y: auto;
-}
+      .main-container {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
 
-.player {
-  height: 90px;
-  background-color: var(--background-highlight);
-  border-top: 1px solid #404040;
-  padding: 16px;
-}
+        .playlist-view {
+          flex: 1;
+          padding: 24px;
+          background-color: var(--background-base);
+          overflow-y: auto;
 
-.search-bar {
-  margin-bottom: 24px;
-}
+          .search-bar {
+            margin-bottom: 24px;
 
-.search-bar input {
-  width: 100%;
-  padding: 12px;
-  background-color: var(--background-highlight);
-  border: none;
-  border-radius: 4px;
-  color: var(--text-primary);
+            input {
+              width: 100%;
+              padding: 12px;
+              background-color: var(--background-highlight);
+              border: none;
+              border-radius: 4px;
+              color: var(--text-primary);
+            }
+          }
+
+
+        }
+      }
+
+      .player {
+        height: 90px;
+        background-color: var(--background-highlight);
+        border-top: 1px solid #404040;
+        padding: 16px;
+      }
+    }
+  }
 }
 
 .song-item {

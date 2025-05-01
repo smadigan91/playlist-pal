@@ -12,7 +12,7 @@
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Playlist, Song, User } from '../types';
+import { Playlist, Track, User } from '../types';
 
 // This is fine to be defined here since the interface communicates the shape of this "provider"
 interface PlaylistContextType {
@@ -25,7 +25,7 @@ interface PlaylistContextType {
   logout: () => void;
   setSelectedPlaylist: (playlist: Playlist) => void;
   createPlaylist: (name: string) => void;
-  addSongToPlaylist: (playlistId: number, song: Song) => void;
+  addSongToPlaylist: (playlistId: number, song: Track) => void;
 }
 
 const PlaylistContext = createContext<PlaylistContextType | undefined>(undefined);
@@ -125,7 +125,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const fetchPlaylists = async () => {
     try {
       // TODO: verify the API endpoint for this
-      const response = await fetch(`${apiBase}/api/playlists`);
+      const response = await fetch(`${apiBase}/playlists`);
       const data = await response.json();
       setPlaylists(data);
     } catch (error) {
@@ -163,7 +163,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Function to add a song to a playlist. This is called when the user wants to add a song to a playlist.
   // Attach this function to the add song button in the UI.
-  const addSongToPlaylist = async (playlistId: number, song: Song) => {
+  const addSongToPlaylist = async (playlistId: number, song: Track) => {
     if (!isAuthenticated) {
       // alternative way to handle login if we want to let users interact with the app before logged in or authenticated
       // TODO: redirect ot login page or popout a window
@@ -184,8 +184,8 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // TODO: this seems right but needs to be debugged and tested to make sure it is doing
       // what we expect it to do. This is adding the new song to the current list of songs in the playlist
       setPlaylists(playlists.map(p => {
-        if (p.id === playlistId) {
-          return { ...p, songs: [...p.songs, song] };
+        if (p.playlist_id === playlistId) {
+          return { ...p, songs: [...p.tracks as Track[], song] };
         }
         return p;
       }));

@@ -5,54 +5,77 @@
 import React, { useState } from 'react';
 import { usePlaylist } from '../context/PlaylistContext';
 
-const PlaylistView: React.FC = () => {
-  // Get the selected playlist "varaible" and the function to add a song to the playlist from 
-  // the provider using the custom hook we defined in `PLaylistContext.tsx`
-  const { selectedPlaylist, addSongToPlaylist } = usePlaylist();
-  const [playlists, setPlaylists] = useState<any[]>([]); // TODO: replace with actual type
+// components
+import PlaylistCard from './PlaylistCard';
 
-  return (
-    <div className="p-6 bg-gray-900 text-white">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-green-500 mb-4">Discover Playlists</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {playlists.map((playlist, index) => (
-            <div
+// types
+import { Playlist, User } from '../types/index';
+
+const PlaylistView: React.FC = () => {
+  const { selectedPlaylist, addSongToPlaylist } = usePlaylist();
+  const [playlists, setPlaylists] = useState<Playlist[]>([
+    {
+      playlist_id: 1,
+      name: 'Late Night Drives',
+      description: 'Atmospheric and moody songs perfect for night cruising. Share your favorite night vibes!',
+      owner: 'MelodyMaker',
+      collaborators: 3,
+      tracks: 7,
+      image_url: '/images/late-night-drives.jpg',
+    },
+    {
+      playlist_id: 2,
+      name: 'Workout Motivation',
+      description: 'High-energy tracks to power through your toughest workouts. Let\'s build this together!',
+      owner: 'RhythmQueen',
+      collaborators: 2,
+      tracks: 5,
+      image_url: '/images/workout-motivation.jpg',
+    },
+    {
+      playlist_id: 3,
+      name: 'Chill Study Sessions',
+      description: 'Focus-enhancing tunes for productive study sessions. Add your favorite concentration tracks!',
+      owner: 'BeatMaster',
+      collaborators: 3,
+      tracks: 8,
+      image_url: '/images/chill-study-sessions.jpg',
+    },
+    {
+      playlist_id: 4,
+      name: 'Summer Vibes 2023',
+      description: 'The hottest tracks to keep your summer cool. Collaborative playlist for beach parties!',
+      owner: 'MusicLover',
+      collaborators: 3,
+      tracks: 6,
+      image_url: '/images/summer-vibes.jpg',
+    },
+  ]);
+
+  const PlaylistsRow = (title: string, playlistsSet: Playlist[]) => {
+    return (
+      <div className='mb-12'>
+        <h2 className='text-3xl font-bold text-green-500 mb-6'>{title}</h2>
+        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+          {playlistsSet.map((playlist, index) => {
+            // add Playlist component here
+            return (<PlaylistCard
               key={index}
-              className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:scale-105 transition-transform"
-            >
-              <img
-                className="w-full h-40 object-cover"
-                src={playlist.image || '/placeholder.jpg'}
-                alt={playlist.name}
-              />
-              <div className="p-4">
-                <h3 className="text-lg font-semibold mb-2">{playlist.name}</h3>
-                <p className="text-sm text-gray-400 mb-4">{playlist.description}</p>
-                <div className="flex justify-between items-center text-sm text-gray-400">
-                  <div>{playlist.owner}</div>
-                  <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-1">
-                      <span>👥</span>
-                      <span>{playlist.collaborators || 0}</span>
-                    </div>
-                    <span>{playlist.tracks || 0} tracks</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+              playlist={playlist}
+              // onClick={() => {}}
+            />)
+          })}
         </div>
       </div>
+    )
+  }
 
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-green-500 mb-4">Your Playlists</h2>
-        {/* Add your playlists here */}
-      </div>
-
-      <div>
-        <h2 className="text-2xl font-bold text-green-500 mb-4">Your Collaborations</h2>
-        {/* Add your collaborations here */}
+  return (
+    <div className='p-6 text-white min-h-screen'>
+      <div className='max-w-7xl mx-auto'>
+        {PlaylistsRow('Discover Playlists', playlists)}
+        {PlaylistsRow('Your Playlists', [playlists[0]])}
+        {PlaylistsRow('Your Collaborations', [playlists[0], playlists[1]])}
       </div>
     </div>
   );

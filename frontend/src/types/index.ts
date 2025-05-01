@@ -10,13 +10,19 @@
  */
 
 export interface Playlist {
-  id: number;
+  playlist_id: number;
   name: string;
-  owner: string;
-  songs: Song[];
+  description: string;
+  // should this be a User or the id to the user?
+  owner: User | string;
+  // TODO: change to be one type, either number or User[]
+  collaborators: User[] | number;
+  // TODO: change to be one type, either number or Track[]
+  tracks: Track[] | number;
+  image_url: string;
 }
 
-export interface Song {
+export interface Track {
   id: number;
   title: string;
   artist: string;

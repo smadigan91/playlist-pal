@@ -22,6 +22,7 @@ const Navbar: React.FC = () => {
     <div className='navbar'>
       <div className='navbar-logo'></div>
       <div className='navbar-user'>
+        {/* TODO: this hould trigger the login flow popup, not redirect */}
         {!user && <button className='navbar-login-button' onClick={() => window.location.href = '/login'}>
             Log In
         </button>}

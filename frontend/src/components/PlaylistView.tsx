@@ -12,34 +12,47 @@ const PlaylistView: React.FC = () => {
   const [playlists, setPlaylists] = useState<any[]>([]); // TODO: replace with actual type
 
   return (
-    <div className='playlist-view'>
-      <div className='playlist-section'>
-        <h2>Discover Playlists</h2>
-        <div className='playlist-list'>
-          <div className='playlist-list-item'>
-            <img className='playlist-image' />
-            <div className='playlist-info'>
-              <h3 className='playlist-name'></h3>
-              <p className='playlist-description'></p>
-              <div>
-                <div className='playlist-owner'>owner</div>
-                <div className='more-platlist-info'>
-                  <div className='num-collaborators'>
-                    <span className='icon'>I</span>
-                    <div className=''>3</div>
+    <div className="p-6 bg-gray-900 text-white">
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-green-500 mb-4">Discover Playlists</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {playlists.map((playlist, index) => (
+            <div
+              key={index}
+              className="bg-gray-800 rounded-lg shadow-md overflow-hidden hover:scale-105 transition-transform"
+            >
+              <img
+                className="w-full h-40 object-cover"
+                src={playlist.image || '/placeholder.jpg'}
+                alt={playlist.name}
+              />
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-2">{playlist.name}</h3>
+                <p className="text-sm text-gray-400 mb-4">{playlist.description}</p>
+                <div className="flex justify-between items-center text-sm text-gray-400">
+                  <div>{playlist.owner}</div>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-1">
+                      <span>👥</span>
+                      <span>{playlist.collaborators || 0}</span>
+                    </div>
+                    <span>{playlist.tracks || 0} tracks</span>
                   </div>
-                  <span className='num-tracks'>{3} tracks</span>
                 </div>
               </div>
             </div>
-          </div>
-          <div className='playlist-section'>
-            <h2>Your PLaylists</h2>
-          </div>
-          <div className='playlist-section'>
-            <h2>Your Collaborations</h2>
-          </div>
+          ))}
         </div>
+      </div>
+
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-green-500 mb-4">Your Playlists</h2>
+        {/* Add your playlists here */}
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold text-green-500 mb-4">Your Collaborations</h2>
+        {/* Add your collaborations here */}
       </div>
     </div>
   );

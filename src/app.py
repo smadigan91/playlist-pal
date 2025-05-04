@@ -1,7 +1,9 @@
+from datetime import timedelta
+
+from cachelib import FileSystemCache
 from flask import Flask, request, jsonify, redirect, session, make_response
 from flask_cors import CORS
 from flask_session import Session
-from datetime import timedelta
 
 from .config.env import *
 from .errors.base import BaseWebAppError
@@ -18,8 +20,15 @@ CORS(app, supports_credentials=True)
 
 # configure session, db
 app.secret_key = SESSION_KEY
-app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_REDIS'] = get_redis_connection()
+redis_conn = get_redis_connection()
+if redis_conn:
+    app.config['SESSION_TYPE'] = 'redis'
+    app.config['SESSION_REDIS'] = get_redis_connection()
+else:
+    app.config['SESSION_TYPE'] = 'filesystem'
+    app.config['SESSION_TYPE'] = 'cachelib'
+    app.config['SESSION_SERIALIZATION_FORMAT'] = 'json'
+    app.config['SESSION_CACHELIB'] = FileSystemCache(threshold=50, cache_dir="/flask_session"),
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=3)
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
@@ -30,6 +39,7 @@ server_session = Session(app)
 db.init_app(app)
 with app.app_context():
     db.create_all()
+
 
 # error handling
 def default_exception_handler(exception):

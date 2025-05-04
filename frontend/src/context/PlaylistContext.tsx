@@ -99,7 +99,12 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Attach this function to the logout button in the UI.
   const logout = async () => {
     try {
-      await fetch(`${apiBase}/logout`);
+      await fetch(`${apiBase}/logout`, { 
+        credentials: 'include',
+        headers: {
+          cookie: document.cookie
+        }
+      });
 
       // if successful, reset the state of the app by clearing the local state variables for
       // the provider to their initial/default values

@@ -40,7 +40,7 @@ export const PlaylistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Get the current hostname to use for API calls
   // This is really bad practice and should be changed to use an environment variable. When this is deployed
   // outside of a local environemnt, the hostname will be different and the API calls will break.
-  const apiBase = "http://localhost:8080";
+  const apiBase = "http://localhost:8000";
 
   // TODO: this is commented out for now because it is not working. We need to figure out how to use the
   // useEffect hook to check the authentication status of the user when the context is created and mounted

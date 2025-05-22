@@ -1,7 +1,5 @@
 from ..logging.logger import log
 
-from typing import Optional
-
 
 class BaseWebAppError(Exception):
 
@@ -33,11 +31,11 @@ class BaseWebAppError(Exception):
 
 class SpotifyError(BaseWebAppError):
 
-    def __init__(self, message, status_code = 400, cause = None):
+    def __init__(self, message, status_code=400, cause=None):
         super().__init__(f"Spotify error: {message}", status_code, cause)
 
 
 class DatabaseError(BaseWebAppError):
 
-    def __init__(self, message, status_code = 500, cause = None):
+    def __init__(self, message, status_code=500, cause=None):
         super().__init__(f"Database error: {message}", status_code, cause)

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from flask import session
-from spotipy.oauth2 import SpotifyOAuth
 from spotipy.cache_handler import RedisCacheHandler
+from spotipy.oauth2 import SpotifyOAuth
 
 from .client import SpotifyClient
 from ..config.env import *
@@ -11,14 +11,25 @@ from ..logging.logger import log
 
 SPOTIFY_REDIRECT_URI = f'{BASE_URL}/auth'
 SCOPE = 'user-read-private user-read-email playlist-read-private playlist-modify-public playlist-modify-private'
-sp_oauth = SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET,
-                        redirect_uri=SPOTIFY_REDIRECT_URI, scope=SCOPE, show_dialog=True,
-                        cache_handler=RedisCacheHandler(redis=get_redis_connection()))
+
+
+def init_oauth():
+    redis_conn = get_redis_connection()
+    if redis_conn:
+        return SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET,
+                            redirect_uri=SPOTIFY_REDIRECT_URI, scope=SCOPE, show_dialog=True,
+                            cache_handler=RedisCacheHandler(redis=get_redis_connection()))
+    else:
+        return SpotifyOAuth(client_id=SPOTIFY_CLIENT_ID, client_secret=SPOTIFY_CLIENT_SECRET,
+                            redirect_uri=SPOTIFY_REDIRECT_URI, scope=SCOPE, show_dialog=True)
+
+
+sp_oauth = init_oauth()
 
 
 class SpotifyAuthError(SpotifyError):
 
-    def __init__(self, message, cause = None):
+    def __init__(self, message, cause=None):
         super().__init__(message, 401, cause)
 
 
